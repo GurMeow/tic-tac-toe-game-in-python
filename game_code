@@ -1,5 +1,3 @@
-BOARDSIZE = 3
-
 def print_board(b):
     for row in b:
         print(" ".join(row))
@@ -25,6 +23,8 @@ def main():
             
             y, x = input("enter the y cordinate: "), input("enter the x cordinate: ")
             
+            
+            
             if y>='0' and y<='9':
                 y = int(y)
             else:
@@ -38,14 +38,19 @@ def main():
                 print("game stopping")
                 break
             
-            player = 2
+            if main_board[y][x]=='-':
+                main_board[y][x] = 'X'
+                player = 2
+            else:
+                print('error, taken place')
             
-            main_board[y][x] = 'X'
         elif player==2:
             print("player 2 turn")
             
             y, x = input("enter the y cordinate: "), input("enter the x cordinate: ")
             
+            
+            
             if y>='0' and y<='9':
                 y = int(y)
             else:
@@ -59,7 +64,11 @@ def main():
                 print("game stopping")
                 break
             
-            main_board[y][x] = 'O'
+            if main_board[y][x]=='-':
+                main_board[y][x] = 'X'
+                player = 2
+            else:
+                print('error, taken place')
         
         print_board(main_board)
         
