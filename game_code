@@ -111,13 +111,27 @@ def diagonal_line_check(m):
     
     return 0
 
+def tie_check(m):
+    c = 0
+    
+    for r1 in m:
+        for r2 in r1:
+            if r2!='-':
+                c+=1
+    
+    if c==9:
+        return 1
+    
+    return 0
+
 # check if theres a winner
 def winner_check(m):
     if straight_line_check(m)!=0:
         return straight_line_check(m)
-    
-    if diagonal_line_check(m)!=0:
+    elif diagonal_line_check(m)!=0:
         return diagonal_line_check(m)
+    elif tie_check(m)==1:
+        return 3
     
     return 0
 
@@ -153,8 +167,11 @@ def main():
         
         print_board(main_board)
         
-        if winner_check(main_board)!=0:
+        if winner_check(main_board)!=0 and winner_check(main_board)!=3:
             print(f"player {winner_check(main_board)} won")
+            return
+        elif winner_check(main_board)==3:
+            print("tie")
             return
     
     return
