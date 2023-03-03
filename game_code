@@ -1,13 +1,15 @@
 import time
 
+
 # to print the fucking board
-def print_board(b):
+def print_board(board):
     print('# 1 2 3 - x')
     for i in range(3):
-        print(i+1, " ".join(b[i]))
+        print(i+1, " ".join(board[i]))
     print('|\ny\n')
     
     time.sleep(0.25)
+
 
 # to check what the player will do in his turn
 def turn(player, main_board):
@@ -42,101 +44,130 @@ def turn(player, main_board):
     
     return 0
 
-def check_same(m):
-    f = m[0]
-    for i in range(1, len(m)):
-        if m[i] != f:
+
+def are_all_elements_same(board):
+    f = board
+    for i in range(1, len(board)):
+        if board[i] != f:
+            print('e')
             return False
     return True
 
+
+def symbol_convert(symbol):
+    if symbol=='X':
+        return 1
+    elif symbol=='O':
+        return 2
+    
+    return '-'
+
+
 # check the straight lines in the board
-def straight_line_check(m):
+def straight_line_check(board):
     cpy = ['', '', '']
     
     for i in range(3):
         for j in range(3):
-            if m[i][j]!='-':
-                cpy[j] = m[i][j]
+            if board[i][j]!='-':
+                cpy[j] = board[i][j]
                 
-                if check_same(m):
-                    print('e')
-                    symbol = cpy[i][j]
-                    if symbol=='X':
-                        symbol = 1
-                    elif symbol=='O':
-                        symbol = 2
+                print(cpy)
+                
+                if are_all_elements_same(cpy) and j==2 and cpy[0]!='':
+                    symbol = cpy[0]
+                    symbol = symbol_convert(symbol)
                     
                     return symbol
             
-        for j in range(3):
-            if m[j][i]!='-':
-                cpy[j] = m[j][i]
+            if board[j][i]!='-':
+                cpy[j] = board[j][i]
                 
-                if check_same(m):
-                    print('e')
-                    symbol = cpy[j][i]
-                    if symbol=='X':
-                        symbol = 1
-                    elif symbol=='O':
-                        symbol = 2
+                if are_all_elements_same(cpy):
+                    symbol = cpy[0]
+                    symbol = symbol_convert(symbol)
                     
                     return symbol
     
+    
+    
     return 0
 
+
 # check diagonal lines in the board
-def diagonal_line_check(m):
-    symbol = m[0][0]
+def diagonal_line_check(board):
+    symbol = board[0][0]
     diagonal_1 = True
-    for i in range(1, len(m)):
-        if m[i][i] != symbol or symbol == '-':
+    for i in range(1, len(board)):
+        if board[i][i] != symbol or symbol == '-':
             diagonal_1 = False
             break
     
-    if symbol=='X':
-        symbol = 1
-    elif symbol=='O':
-        symbol = 2
+    symbol_convert(symbol)
     
     if diagonal_1:
         return symbol
     
-    symbol = m[0][len(m)-1]
+    symbol = board[0][len(board)-1]
     diagonal_2 = True
-    for i in range(len(m)-2, -1, -1):
-        if m[len(m)-i-1][i] != symbol or symbol == '-':
+    for i in range(len(board)-2, -1, -1):
+        if board[len(board)-i-1][i] != symbol or symbol == '-':
             diagonal_2 = False
             break
     
-    if symbol=='X':
-        symbol = 1
-    elif symbol=='O':
-        symbol = 2
+    symbol_convert(symbol)
     
     if diagonal_2:
         return symbol
     
     return 0
 
+
 # checks if theres a tie in the game
-def tie_check(m):
-    for r1 in m:
+def tie_check(board):
+    for r1 in board:
         for r2 in r1:
             if r2=='-':
                 return 1
     
     return 0
 
+
 # check if theres a winner
-def winner_check(m):
-    if straight_line_check(m)!=0:
-        return straight_line_check(m)
-    elif diagonal_line_check(m)!=0:
-        return diagonal_line_check(m)
-    elif tie_check(m)==0:
+def winner_check(board):
+    if straight_line_check(board)!=0:
+        return straight_line_check(board)
+    elif diagonal_line_check(board)!=0:
+        return diagonal_line_check(board)
+    elif tie_check(board)==0:
         return 3
     
     return 0
+
+
+def game(player, main_board):
+    if player==1:
+        if turn(player, main_board)==1:
+            player = 1
+        else:
+            player = 2
+            
+    elif player==2:
+        if turn(player, main_board)==1:
+            player = 2
+        else:
+            player = 1
+    
+    print_board(main_board)
+    
+    if winner_check(main_board)!=0 and winner_check(main_board)!=3:
+        print(f"player {winner_check(main_board)} won")
+        return
+    elif winner_check(main_board)==3:
+        print("tie")
+        return
+    
+    return player, main_board
 
 # main fucking code
 def main():
@@ -146,33 +177,14 @@ def main():
     # change the start position to test diffrent things
     main_board = [
         ['X', 'X', '-'],
-        ['X', 'X', '-'],
+        ['-', '-', '-'],
         ['-', '-', '-']
     ]
     
     print_board(main_board)
     
     while True:
-        if player==1:
-            if turn(player, main_board)==1:
-                player = 1
-            else:
-                player = 2
-            
-        elif player==2:
-            if turn(player, main_board)==1:
-                player = 2
-            else:
-                player = 1
-        
-        print_board(main_board)
-        
-        if winner_check(main_board)!=0 and winner_check(main_board)!=3:
-            print(f"player {winner_check(main_board)} won")
-            return
-        elif winner_check(main_board)==3:
-            print("tie")
-            return
+        player, main_board = game(player, main_board)
     
     return
 
