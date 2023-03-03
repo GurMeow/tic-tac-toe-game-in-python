@@ -42,24 +42,25 @@ def turn(player, main_board):
     
     return 0
 
-def check_same(lst):
-    first = lst[0]
-    for i in range(1, len(lst)):
-        if lst[i] != first:
+def check_same(m):
+    f = m[0]
+    for i in range(1, len(m)):
+        if m[i] != f:
             return False
     return True
 
 # check the straight lines in the board
 def straight_line_check(m):
-    cp = ['', '', '']
+    cpy = ['', '', '']
     
     for i in range(3):
         for j in range(3):
             if m[i][j]!='-':
-                cp[j] = m[i][j]
+                cpy[j] = m[i][j]
                 
                 if check_same(m):
-                    symbol = cp[i][j]
+                    print('e')
+                    symbol = cpy[i][j]
                     if symbol=='X':
                         symbol = 1
                     elif symbol=='O':
@@ -69,10 +70,11 @@ def straight_line_check(m):
             
         for j in range(3):
             if m[j][i]!='-':
-                cp[j] = m[j][i]
+                cpy[j] = m[j][i]
                 
                 if check_same(m):
-                    symbol = cp[j][i]
+                    print('e')
+                    symbol = cpy[j][i]
                     if symbol=='X':
                         symbol = 1
                     elif symbol=='O':
@@ -143,8 +145,8 @@ def main():
     
     # change the start position to test diffrent things
     main_board = [
-        ['-', '-', '-'],
-        ['-', '-', '-'],
+        ['X', 'X', '-'],
+        ['X', 'X', '-'],
         ['-', '-', '-']
     ]
     
