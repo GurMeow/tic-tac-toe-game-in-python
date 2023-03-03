@@ -5,13 +5,15 @@ def print_board(b):
     print('# 1 2 3 - x')
     for i in range(3):
         print(i+1, " ".join(b[i]))
-    print('|\ny')
+    print('|\ny\n')
+    
+    time.sleep(0.25)
 
 # to check what the player will do in his turn
 def turn(player, main_board):
     stop = False
     
-    print("\nplayer", player, "turn")
+    print(f"player {player} turn")
     
     try:
         y, x = int(input("enter the y cordinate: ")), int(input("enter the x cordinate: "))
@@ -19,7 +21,7 @@ def turn(player, main_board):
         print("error, please enter numbers")
         return 1
     
-    if y != 0 and x != 0:
+    if y > 0 and x > 0:
         y, x = y-1, x-1
     else:
         print("error, please enter numbers in range")
@@ -36,6 +38,7 @@ def turn(player, main_board):
             return 1
     except IndexError:
         print("error, please enter numbers in range")
+        return 1
     
     return 0
 
@@ -52,32 +55,34 @@ def straight_line_check(m):
     
     for i in range(3):
         for j in range(3):
-            cp[j] = m[i][j]
-            
-            if check_same(m):
-                symbol = cp[i][j]
-                if symbol=='X':
-                    symbol = 1
-                elif symbol=='O':
-                    symbol = 2
+            if m[i][j]!='-':
+                cp[j] = m[i][j]
                 
-                return symbol
+                if check_same(m):
+                    symbol = cp[i][j]
+                    if symbol=='X':
+                        symbol = 1
+                    elif symbol=='O':
+                        symbol = 2
+                    
+                    return symbol
             
         for j in range(3):
-            cp[j] = m[j][i]
-            
-            if check_same(m):
-                symbol = cp[j][i]
-                if symbol=='X':
-                    symbol = 1
-                elif symbol=='O':
-                    symbol = 2
+            if m[j][i]!='-':
+                cp[j] = m[j][i]
                 
-                return symbol
+                if check_same(m):
+                    symbol = cp[j][i]
+                    if symbol=='X':
+                        symbol = 1
+                    elif symbol=='O':
+                        symbol = 2
+                    
+                    return symbol
     
     return 0
 
-#check diagonal lines in the board
+# check diagonal lines in the board
 def diagonal_line_check(m):
     symbol = m[0][0]
     diagonal_1 = True
@@ -113,15 +118,10 @@ def diagonal_line_check(m):
 
 # checks if theres a tie in the game
 def tie_check(m):
-    c = 0
-    
     for r1 in m:
         for r2 in r1:
-            if r2!='-':
-                c+=1
-    
-    if c==9:
-        return 1
+            if r2=='-':
+                return 1
     
     return 0
 
@@ -131,7 +131,7 @@ def winner_check(m):
         return straight_line_check(m)
     elif diagonal_line_check(m)!=0:
         return diagonal_line_check(m)
-    elif tie_check(m)==1:
+    elif tie_check(m)==0:
         return 3
     
     return 0
@@ -157,14 +157,11 @@ def main():
             else:
                 player = 2
             
-            time.sleep(0.5)
         elif player==2:
             if turn(player, main_board)==1:
                 player = 2
             else:
                 player = 1
-            
-            time.sleep(0.5)
         
         print_board(main_board)
         
