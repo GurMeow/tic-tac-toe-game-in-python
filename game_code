@@ -111,6 +111,7 @@ def diagonal_line_check(m):
     
     return 0
 
+# checks if theres a tie in the game
 def tie_check(m):
     c = 0
     
