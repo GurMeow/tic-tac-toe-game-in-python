@@ -19,7 +19,7 @@ def placement(player):
         y, x = int(input("enter the y cordinate: ")), int(input("enter the x cordinate: "))
     except ValueError:
         print("error, please enter numbers and not letters and symbols")
-        return 1
+        return "error"
     
     return y, x
 
@@ -32,7 +32,7 @@ def valid_place(y, x, main_board, player):
         y, x = y-1, x-1
     else:
         print("error, please enter numbers in range of 1 to 3")
-        return 1
+        return "error"
     
     try:
         if main_board[y][x]=='-':
@@ -42,27 +42,27 @@ def valid_place(y, x, main_board, player):
                 main_board[y][x] = 'O'
         else:
             print("error, spot has already been taken")
-            return 1
+            return "error"
     except IndexError:
         print("error, please enter numbers in range of 1 to 3")
-        return 1
+        return "error"
     
-    return 0
+    return "valid"
 
 
 # to check what the player will do in his turn
 def turn(player, main_board):
     place = placement(player)
     
-    if place!=1:
+    if place!="error":
         y, x = place
     else:
-        return 1
+        return "error"
     
-    if valid_place(y, x, main_board, player)==1:
-        return 1
+    if valid_place(y, x, main_board, player)=="error":
+        return "error"
     
-    return 0
+    return "done"
 
 
 # checking if a row is all the same
@@ -91,7 +91,7 @@ def row_check(board, row, i, j):
             
             return symbol
     
-    return 0
+    return "invalid"
 
 
 # columns check for straight line check
@@ -104,22 +104,24 @@ def columns_check(board, column, i, j):
             
             return symbol
     
-    return 0
+    return "invalid"
+
 
 # check the straight lines in the board
 def straight_line_check(board):
-    row_column = ['', '', '']
+    row = ['', '', '']
+    column = ['', '', '']
     
     for i in range(3):
         for j in range(3):
             
-            if row_check(board, row_column, i, j)!=0:
-                return row_check(board, row_column, i, j)
+            if row_check(board, row, i, j)!="invalid":
+                return row_check(board, row, i, j)
             
-            if columns_check(board, row_column, i, j)!=0:
-                return columns_check(board, row_column, i, j)
+            if columns_check(board, column, i, j)!="invalid":
+                return columns_check(board, column, i, j)
             
-    return 0
+    return "invalid"
 
 
 # check diagonal lines in the board
@@ -148,7 +150,7 @@ def diagonal_line_check(m):
     if diagonal_2:
         return symbol
     
-    return 0
+    return "invalid"
 
 
 # checks if theres a tie in the game
@@ -156,41 +158,42 @@ def tie_check(m):
     for r1 in m:
         for r2 in r1:
             if r2=='-':
-                return 1
+                return "invalid"
     
-    return 0
+    return "valid"
 
 
 # check if theres a winner
 def winner_check(m):
-    if straight_line_check(m)!=0:
+    if straight_line_check(m)!="invalid":
         return straight_line_check(m)
-    elif diagonal_line_check(m)!=0:
+    elif diagonal_line_check(m)!="invalid":
         return diagonal_line_check(m)
-    elif tie_check(m)==0:
-        return 3
+    elif tie_check(m)=="valid":
+        return "tie"
     
-    return 0
+    return "non"
 
 
 # the main game code
 def main_game(player, main_board, counter):
     
-    if turn(player, main_board)==1:
+    if turn(player, main_board)=="error":
         counter+=1
     else:
         player = 3-player
     
     print_board(main_board)
     
-    if winner_check(main_board)!=0 and winner_check(main_board)!=3:
+    if winner_check(main_board)!="non" and winner_check(main_board)!="tie":
         print(f"player {winner_check(main_board)} won")
-        return 0
-    elif winner_check(main_board)==3:
+        return "gameover"
+    elif winner_check(main_board)=="tie":
         print("tie")
-        return 0
+        return "gameover"
     else:
         return player, main_board, counter
+
 
 # main fucking code
 def main():
@@ -215,7 +218,7 @@ def main():
         
         game = main_game(player, main_board, counter)
         
-        if game!=0:
+        if game!="gameover":
             player, main_board, counter = game
         else:
             return
