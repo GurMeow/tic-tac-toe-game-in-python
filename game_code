@@ -1,5 +1,6 @@
 import time
 
+
 # to print the fucking board
 def print_board(b):
     print('# 1 2 3 - x')
@@ -8,6 +9,7 @@ def print_board(b):
     print('|\ny\n')
     
     time.sleep(0.25)
+
 
 # to check what the player will do in his turn
 def turn(player, main_board):
@@ -42,12 +44,25 @@ def turn(player, main_board):
     
     return 0
 
+
+# checking if a row is all the same
 def check_same(lst):
-    first = lst[0]
+    first_element = lst[0]
     for i in range(1, len(lst)):
-        if lst[i] != first:
+        if lst[i] != first_element:
             return False
     return True
+
+
+# converting X into 1, O into 2, '-' will stay same
+def convert_symbol(symbol):
+    if symbol=='X':
+        return 1
+    elif symbol=='O':
+        return 2
+    
+    return '-'
+
 
 # check the straight lines in the board
 def straight_line_check(board):
@@ -59,11 +74,7 @@ def straight_line_check(board):
                 column[j] = board[i][j]
                 
                 if check_same(column):
-                    symbol = column[0]
-                    if symbol=='X':
-                        symbol = 1
-                    elif symbol=='O':
-                        symbol = 2
+                    symbol = convert_symbol(column[0])
                     
                     return symbol
             
@@ -72,15 +83,12 @@ def straight_line_check(board):
                 column[j] = board[j][i]
                 
                 if check_same(board):
-                    symbol = column[0]
-                    if symbol=='X':
-                        symbol = 1
-                    elif symbol=='O':
-                        symbol = 2
+                    symbol = convert_symbol(column[0])
                     
                     return symbol
     
     return 0
+
 
 # check diagonal lines in the board
 def diagonal_line_check(m):
@@ -91,10 +99,7 @@ def diagonal_line_check(m):
             diagonal_1 = False
             break
     
-    if symbol=='X':
-        symbol = 1
-    elif symbol=='O':
-        symbol = 2
+    symbol = convert_symbol(symbol)
     
     if diagonal_1:
         return symbol
@@ -106,15 +111,13 @@ def diagonal_line_check(m):
             diagonal_2 = False
             break
     
-    if symbol=='X':
-        symbol = 1
-    elif symbol=='O':
-        symbol = 2
+    symbol = convert_symbol(symbol)
     
     if diagonal_2:
         return symbol
     
     return 0
+
 
 # checks if theres a tie in the game
 def tie_check(m):
@@ -124,6 +127,7 @@ def tie_check(m):
                 return 1
     
     return 0
+
 
 # check if theres a winner
 def winner_check(m):
@@ -136,6 +140,7 @@ def winner_check(m):
     
     return 0
 
+
 # main fucking code
 def main():
     
@@ -143,8 +148,8 @@ def main():
     
     # change the start position to test diffrent things
     main_board = [
-        ['X', 'X', '-'],
-        ['X', 'X', '-'],
+        ['O', 'O', '-'],
+        ['O', 'O', '-'],
         ['-', '-', '-']
     ]
     
