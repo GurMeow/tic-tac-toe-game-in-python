@@ -148,8 +148,8 @@ def main():
     
     # change the start position to test diffrent things
     main_board = [
-        ['O', 'O', '-'],
-        ['O', 'O', '-'],
+        ['-', '-', '-'],
+        ['-', '-', '-'],
         ['-', '-', '-']
     ]
     
