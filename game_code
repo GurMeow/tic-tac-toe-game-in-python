@@ -5,40 +5,38 @@ import time
 def print_board(b):
     print('# 1 2 3 - x')
     for i in range(3):
-        print(i+1, " ".join(b[i]))
+        print(i + 1, " ".join(b[i]))
     print('|\ny\n')
-    
+
     time.sleep(0.25)
 
 
 # get the coordinates for where to place in a turn
 def placement(player):
     print(f"player {player} turn")
-    
+
     try:
-        y, x = int(input("enter the y cordinate: ")), int(input("enter the x cordinate: "))
+        y, x = int(input("enter the y coordinate: ")), int(input("enter the x coordinate: "))
     except ValueError:
         print("error, please enter numbers and not letters and symbols")
         return "error"
-    
+
     return y, x
 
 
-# check the asken place is valid
+# check the asked place is valid
 def valid_place(y, x, main_board, player):
-    stop = False
-    
     if y > 0 and x > 0:
-        y, x = y-1, x-1
+        y, x = y - 1, x - 1
     else:
         print("error, please enter numbers in range of 1 to 3")
         return "error"
-    
+
     try:
-        if main_board[y][x]=='-':
-            if player==1:
+        if main_board[y][x] == '-':
+            if player == 1:
                 main_board[y][x] = 'X'
-            elif player==2:
+            elif player == 2:
                 main_board[y][x] = 'O'
         else:
             print("error, spot has already been taken")
@@ -46,22 +44,22 @@ def valid_place(y, x, main_board, player):
     except IndexError:
         print("error, please enter numbers in range of 1 to 3")
         return "error"
-    
+
     return "valid"
 
 
 # to check what the player will do in his turn
 def turn(player, main_board):
     place = placement(player)
-    
-    if place!="error":
+
+    if place != "error":
         y, x = place
     else:
         return "error"
-    
-    if valid_place(y, x, main_board, player)=="error":
+
+    if valid_place(y, x, main_board, player) == "error":
         return "error"
-    
+
     return "done"
 
 
@@ -73,37 +71,37 @@ def check_same(lst):
 
 # converting X into 1, O into 2, '-' will stay same
 def convert_symbol(symbol):
-    if symbol=='X':
+    if symbol == 'X':
         return 1
-    elif symbol=='O':
+    elif symbol == 'O':
         return 2
-    
+
     return '-'
 
 
 # row check for straight line check
 def row_check(board, row, i, j):
-    if board[i][j]!='-':
+    if board[i][j] != '-':
         row[j] = board[i][j]
-        
+
         if check_same(row):
             symbol = convert_symbol(row[0])
-            
+
             return symbol
-    
+
     return "invalid"
 
 
 # columns check for straight line check
 def columns_check(board, column, i, j):
-    if board[j][i]!='-':
+    if board[j][i] != '-':
         column[j] = board[j][i]
-        
+
         if check_same(column):
             symbol = convert_symbol(column[0])
-            
+
             return symbol
-    
+
     return "invalid"
 
 
@@ -111,16 +109,16 @@ def columns_check(board, column, i, j):
 def straight_line_check(board):
     row = ['', '', '']
     column = ['', '', '']
-    
+
     for i in range(3):
         for j in range(3):
-            
-            if row_check(board, row, i, j)!="invalid":
+
+            if row_check(board, row, i, j) != "invalid":
                 return row_check(board, row, i, j)
-            
-            if columns_check(board, column, i, j)!="invalid":
+
+            if columns_check(board, column, i, j) != "invalid":
                 return columns_check(board, column, i, j)
-            
+
     return "invalid"
 
 
@@ -132,97 +130,94 @@ def diagonal_line_check(m):
         if m[i][i] != symbol or symbol == '-':
             diagonal_1 = False
             break
-    
+
     symbol = convert_symbol(symbol)
-    
+
     if diagonal_1:
         return symbol
-    
-    symbol = m[0][len(m)-1]
+
+    symbol = m[0][len(m) - 1]
     diagonal_2 = True
-    for i in range(len(m)-2, -1, -1):
-        if m[len(m)-i-1][i] != symbol or symbol == '-':
+    for i in range(len(m) - 2, -1, -1):
+        if m[len(m) - i - 1][i] != symbol or symbol == '-':
             diagonal_2 = False
             break
-    
+
     symbol = convert_symbol(symbol)
-    
+
     if diagonal_2:
         return symbol
-    
+
     return "invalid"
 
 
-# checks if theres a tie in the game
+# checks if there's a tie in the game
 def tie_check(m):
     for r1 in m:
         for r2 in r1:
-            if r2=='-':
+            if r2 == '-':
                 return "invalid"
-    
+
     return "valid"
 
 
-# check if theres a winner
+# check if there's a winner
 def winner_check(m):
-    if straight_line_check(m)!="invalid":
+    if straight_line_check(m) != "invalid":
         return straight_line_check(m)
-    elif diagonal_line_check(m)!="invalid":
+    elif diagonal_line_check(m) != "invalid":
         return diagonal_line_check(m)
-    elif tie_check(m)=="valid":
+    elif tie_check(m) == "valid":
         return "tie"
-    
+
     return "non"
 
 
 # the main game code
 def main_game(player, main_board, counter):
-    
-    if turn(player, main_board)=="error":
-        counter+=1
+    if turn(player, main_board) == "error":
+        counter += 1
     else:
-        player = 3-player
-    
+        player = 3 - player
+
     print_board(main_board)
-    
-    if winner_check(main_board)!="non" and winner_check(main_board)!="tie":
+
+    if winner_check(main_board) != "non" and winner_check(main_board) != "tie":
         print(f"player {winner_check(main_board)} won")
-        return "gameover"
-    elif winner_check(main_board)=="tie":
+        return "game over"
+    elif winner_check(main_board) == "tie":
         print("tie")
-        return "gameover"
+        return "game over"
     else:
         return player, main_board, counter
 
 
 # main fucking code
 def main():
-    
     counter = 0
-    
+
     player = 1
-    
-    # change the start position to test diffrent things
+
+    # change the start position to test different things
     main_board = [
         ['-', '-', '-'],
         ['-', '-', '-'],
         ['-', '-', '-']
     ]
-    
+
     print_board(main_board)
-    
+
     while True:
-        if counter==3:
-            print("youve entred 3 times invalid input, the game will now be stopped")
-            return
-        
+        if counter == 3:
+            print("you have entered 3 times invalid input, the game will now be stopped")
+            return 0
+
         game = main_game(player, main_board, counter)
-        
-        if game!="gameover":
+
+        if game != "game over":
             player, main_board, counter = game
         else:
-            return
-    
-    return
+            return 0
+
 
 main()
